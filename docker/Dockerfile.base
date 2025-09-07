@@ -1,0 +1,20 @@
+FROM ubuntu:22.04
+
+# Install basic tools and dependencies
+RUN apt-get update && apt-get install -y \
+    bash \
+    coreutils \
+    diffutils \
+    python3 \
+    python3-pip \
+    && rm -rf /var/lib/apt/lists/*
+
+# Set working directory
+WORKDIR /app
+
+# Create a generic test runner script
+COPY run_tests.sh /app/run_tests.sh
+RUN chmod +x /app/run_tests.sh
+
+# Default command
+CMD ["/app/run_tests.sh"]

@@ -1,0 +1,22 @@
+version: '3.8'
+
+services:
+  # Base service for running challenges
+  challengelab:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.base
+    volumes:
+      - ./challenges:/app/challenges:ro
+    working_dir: /app
+    command: ["/app/run_tests.sh"]
+    
+  # Example reverse-string challenge
+  reverse-string:
+    build:
+      context: ./challenges/reverse-string
+      dockerfile: ../../docker/Dockerfile.base
+    volumes:
+      - ./challenges/reverse-string:/app:ro
+    working_dir: /app
+    command: ["/app/run_tests.sh"]

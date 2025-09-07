@@ -1,0 +1,86 @@
+name: ChallengeLab CI
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  test-challenges:
+    runs-on: ubuntu-latest
+    
+    strategy:
+      matrix:
+        challenge: [reverse-string]
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.9'
+    
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+    
+    - name: Install ChallengeLab CLI
+      run: |
+        pip install -e .
+    
+    - name: Build Docker image for ${{ matrix.challenge }}
+      run: |
+        docker build -f docker/Dockerfile.base -t challengelab-${{ matrix.challenge }}:latest ./challenges/${{ matrix.challenge }}
+    
+    - name: Test ${{ matrix.challenge }} challenge
+      run: |
+        challengelab test ${{ matrix.challenge }}
+    
+    - name: Run challenge manually
+      run: |
+        echo "hello world" | challengelab run ${{ matrix.challenge }} --input "hello world"
+
+  test-all-challenges:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.9'
+    
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+    
+    - name: Install ChallengeLab CLI
+      run: |
+        pip install -e .
+    
+    - name: List all challenges
+      run: |
+        challengelab list
+    
+    - name: Test all challenges
+      run: |
+        # Get list of challenges and test each one
+        for challenge in $(challengelab list | grep "  -" | sed 's/  - //'); do
+          echo "Testing challenge: $challenge"
+          challengelab test "$challenge"
+        done
+
+  docker-compose-test:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Test with Docker Compose
+      run: |
+        docker-compose -f docker-compose.yml up --build --abort-on-container-exit reverse-string
