@@ -23,8 +23,8 @@ A platform for containerized CLI coding challenges with automated test harnesses
 
 ```bash
 # Clone the repository
-git clone https://github.com/challengelab/challengelab.git
-cd challengelab
+git clone https://github.com/sukanyaghosh74/ChallengeLab.git
+cd ChallengeLab
 
 # Install dependencies
 pip install -r requirements.txt
@@ -299,7 +299,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 - **Issues**: [GitHub Issues](https://github.com/challengelab/challengelab/issues)
 - **Discussions**: [GitHub Discussions](https://github.com/challengelab/challengelab/discussions)
-- **Email**: team@challengelab.dev
+- **Email**: sukanyaghosh2006@gmail.com
 
 ---
 
